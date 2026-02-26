@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#4f9fb8">
+<meta charset="UTF-8">
+<title>郵便番号検索</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+/* ===== テーマカラー ===== */
+
+:root {
+  --bg: #f4f8fb;
+  --text: #2f3a40;
+  --title: #3e7c92;
+  --accent: #4f9fb8;
+  --card: #ffffff;
+  --border: #e3f0f5;
+  --input-border: #cfe3ea;
+  --brown: #4a3f35;
+  --toggle-bg: #ddeff5;
+}
+
+body.dark {
+  --bg: #161c20;
+  --text: #e6edf1;
+  --title: #7cc3da;
+  --accent: #3c8aa3;
+  --card: #1f262b;
+  --border: #2c3940;
+  --input-border: #2c3940;
+  --brown: #e6ded6;
+  --toggle-bg: #2a3338;
+}
+
+/* ===== ベース ===== */
+
+body {
+  font-family: 'Zen Maru Gothic', sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  color: var(--text);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ===== タイトル ===== */
+
+.title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--title);
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+/* ===== スタイリッシュトグル ===== */
+
+.toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.toggle {
+  width: 64px;
+  height: 30px;
+  background: var(--toggle-bg);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.35s ease;
+  border: 1px solid var(--border);
+}
+
+.toggle-circle {
+  width: 26px;
+  height: 26px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 1.5px;
+  left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: transform 0.35s ease;
+}
+
+body.dark .toggle-circle {
+  transform: translateX(32px);
+}
+
+/* ===== 入力 ===== */
+
+input {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--input-border);
+  background: var(--card);
+  box-sizing: border-box;
+  outline: none;
+  color: var(--brown);
+  font-family: 'Zen Maru Gothic', sans-serif;
+  transition: 0.3s;
+}
+
+input::placeholder {
+  color: #a08c7e;
+}
+
+/* ===== 検索ボタン ===== */
+
+.search-btn {
+  margin-top: 20px;
+  padding: 12px 28px;
+  font-size: 17px;
+  font-weight: 600;
+  font-family: 'Zen Maru Gothic', sans-serif;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.search-btn:hover {
+  opacity: 0.85;
+}
+
+/* ===== カード ===== */
+
+.card {
+  background: var(--card);
+  margin-top: 22px;
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: transform 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.zip {
+  font-weight: 700;
+  font-size: 19px;
+  margin-bottom: 6px;
+  color: var(--title);
+}
+
+.address {
+  color: var(--brown);
+  font-weight: 500;
+  font-size: 15px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="title">
+  📮郵便番号検索 💌
+</div>
+
+<div class="toggle-wrapper">
+  <div class="toggle" onclick="toggleDarkMode()">
+    <div class="toggle-circle" id="toggleIcon">🌙</div>
+  </div>
+</div>
+
+<input type="text" id="address" placeholder="例：名古屋市中区 / 岡崎市大西">
+<button class="search-btn" onclick="searchAddress()">検索</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+/* ===== ダークモード保存処理 ===== */
+
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+updateIcon();
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  updateIcon();
+}
+
+function updateIcon() {
+  const icon = document.getElementById("toggleIcon");
+  icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+}
+
+/* ===== 郵便番号検索 ===== */
+
+let zipData = [];
+let dataLoaded = false;
+
+async function loadCSV() {
+  const response = await fetch("utf_ken_all.csv");
+  const text = await response.text();
+  const lines = text.split("\n");
+
+  zipData = lines
+    .map(line => line.split(","))
+    .filter(cols => cols.length > 8)
+    .map(cols => ({
+      zipcode: cols[2].replace(/"/g, ""),
+      pref: cols[6].replace(/"/g, ""),
+      city: cols[7].replace(/"/g, ""),
+      town: cols[8].replace(/"/g, "")
+    }));
+
+  dataLoaded = true;
+}
+
+loadCSV();
+
+function formatZip(zip) {
+  return zip.length === 7 ? zip.slice(0,3) + "-" + zip.slice(3) : zip;
+}
+
+function searchAddress() {
+  const input = document.getElementById("address").value.trim();
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "";
+
+  if (!dataLoaded) {
+    resultDiv.innerText = "データ読み込み中…少々お待ちください";
+    return;
+  }
+
+  if (!input) {
+    resultDiv.innerText = "住所を入力してください";
+    return;
+  }
+
+  const results = zipData
+    .filter(item =>
+      (item.pref + item.city + item.town).includes(input)
+    )
+    .slice(0, 20);
+
+  if (results.length === 0) {
+    resultDiv.innerText = "見つかりませんでした";
+    return;
+  }
+
+  results.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <div class="zip">〒${formatZip(item.zipcode)}</div>
+      <div class="address">${item.pref}${item.city}${item.town}</div>
+    `;
+
+    div.onclick = () => {
+      navigator.clipboard.writeText(formatZip(item.zipcode));
+      alert("郵便番号をコピーしました");
+    };
+
+    resultDiv.appendChild(div);
+  });
+}
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>
