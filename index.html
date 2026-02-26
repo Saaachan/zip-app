@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#4f9fb8">
 <meta charset="UTF-8">
 <title>郵便番号検索</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4f9fb8">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
-
-/* ===== テーマカラー ===== */
 
 :root {
   --bg: #f4f8fb;
@@ -37,8 +36,6 @@ body.dark {
   --toggle-bg: #2a3338;
 }
 
-/* ===== ベース ===== */
-
 body {
   font-family: 'Zen Maru Gothic', sans-serif;
   background: var(--bg);
@@ -55,8 +52,6 @@ body {
   max-width: 500px;
 }
 
-/* ===== タイトル ===== */
-
 .title {
   text-align: center;
   font-size: 26px;
@@ -65,8 +60,6 @@ body {
   margin-bottom: 30px;
   letter-spacing: 1px;
 }
-
-/* ===== スタイリッシュトグル ===== */
 
 .toggle-wrapper {
   display: flex;
@@ -81,7 +74,6 @@ body {
   border-radius: 999px;
   position: relative;
   cursor: pointer;
-  transition: background 0.35s ease;
   border: 1px solid var(--border);
 }
 
@@ -104,8 +96,6 @@ body.dark .toggle-circle {
   transform: translateX(32px);
 }
 
-/* ===== 入力 ===== */
-
 input {
   width: 100%;
   padding: 16px;
@@ -117,14 +107,11 @@ input {
   outline: none;
   color: var(--brown);
   font-family: 'Zen Maru Gothic', sans-serif;
-  transition: 0.3s;
 }
 
 input::placeholder {
   color: #a08c7e;
 }
-
-/* ===== 検索ボタン ===== */
 
 .search-btn {
   margin-top: 20px;
@@ -140,14 +127,7 @@ input::placeholder {
   margin-left: auto;
   margin-right: auto;
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
-
-.search-btn:hover {
-  opacity: 0.85;
-}
-
-/* ===== カード ===== */
 
 .card {
   background: var(--card);
@@ -155,11 +135,6 @@ input::placeholder {
   padding: 22px;
   border-radius: 20px;
   border: 1px solid var(--border);
-  transition: transform 0.25s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
 }
 
 .zip {
@@ -174,6 +149,16 @@ input::placeholder {
   font-weight: 500;
   font-size: 15px;
 }
+
+.message {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;   /* 少しだけ太く */
+  color: var(--brown);
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
 </style>
 </head>
 
@@ -181,7 +166,7 @@ input::placeholder {
 <div class="container">
 
 <div class="title">
-  📮郵便番号検索 💌
+  📮郵便番号検索💌
 </div>
 
 <div class="toggle-wrapper">
@@ -190,7 +175,7 @@ input::placeholder {
   </div>
 </div>
 
-<input type="text" id="address" placeholder="例：名古屋市中区 / 岡崎市大西">
+<input type="text" id="address" placeholder="例：名古屋市中区/岡崎市大西">
 <button class="search-btn" onclick="searchAddress()">検索</button>
 
 <div id="result"></div>
@@ -198,19 +183,14 @@ input::placeholder {
 </div>
 
 <script>
-
-/* ===== ダークモード保存処理 ===== */
-
 if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark");
 }
-
 updateIcon();
 
 function toggleDarkMode() {
   document.body.classList.toggle("dark");
   const isDark = document.body.classList.contains("dark");
-
   localStorage.setItem("theme", isDark ? "dark" : "light");
   updateIcon();
 }
@@ -220,10 +200,11 @@ function updateIcon() {
   icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
 }
 
-/* ===== 郵便番号検索 ===== */
-
 let zipData = [];
 let dataLoaded = false;
+let allResults = [];
+let displayedCount = 0;
+const displayStep = 20;
 
 async function loadCSV() {
   const response = await fetch("utf_ken_all.csv");
@@ -242,7 +223,6 @@ async function loadCSV() {
 
   dataLoaded = true;
 }
-
 loadCSV();
 
 function formatZip(zip) {
@@ -255,43 +235,67 @@ function searchAddress() {
   resultDiv.innerHTML = "";
 
   if (!dataLoaded) {
-    resultDiv.innerText = "データ読み込み中…少々お待ちください";
+    resultDiv.innerHTML = '<div class="message">データ読み込み中…少々お待ちください</div>';
     return;
   }
 
   if (!input) {
-    resultDiv.innerText = "住所を入力してください";
+    resultDiv.innerHTML = '<div class="message">住所を入力してください</div>';
     return;
   }
 
-  const results = zipData
-    .filter(item =>
-      (item.pref + item.city + item.town).includes(input)
-    )
-    .slice(0, 20);
+  allResults = zipData.filter(item =>
+    (item.pref + item.city + item.town).includes(input)
+  );
 
-  if (results.length === 0) {
-    resultDiv.innerText = "見つかりませんでした";
+  if (allResults.length === 0) {
+    resultDiv.innerHTML = '<div class="message">見つかりませんでした</div>';
     return;
   }
 
-  results.forEach(item => {
+  displayedCount = displayStep;
+  renderResults();
+}
+
+function renderResults() {
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "";
+
+  const total = allResults.length;
+  const visible = Math.min(displayedCount, total);
+
+  const info = document.createElement("div");
+  info.className = "message";
+  info.innerText = `全${total}件中 ${visible > 0 ? 1 : 0}～${visible}件を表示`;
+  resultDiv.appendChild(info);
+
+  allResults.slice(0, visible).forEach(item => {
     const div = document.createElement("div");
     div.className = "card";
-
     div.innerHTML = `
       <div class="zip">〒${formatZip(item.zipcode)}</div>
       <div class="address">${item.pref}${item.city}${item.town}</div>
     `;
-
     div.onclick = () => {
       navigator.clipboard.writeText(formatZip(item.zipcode));
       alert("郵便番号をコピーしました");
     };
-
     resultDiv.appendChild(div);
   });
+
+  if (visible < total) {
+    const moreBtn = document.createElement("button");
+    moreBtn.innerText = "さらに表示";
+    moreBtn.className = "search-btn";
+    moreBtn.style.marginTop = "16px";
+    moreBtn.onclick = () => {
+      displayedCount += displayStep;
+      renderResults();
+    };
+    resultDiv.appendChild(moreBtn);
+  }
 }
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }

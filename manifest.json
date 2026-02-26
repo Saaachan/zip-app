@@ -1,6 +1,6 @@
 {
-  "name": "住所 → 郵便番号検索",
-  "short_name": "郵便番号検索",
+  "name": "Zip Search",
+  "short_name": "Zip Search",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f4f8fb",
