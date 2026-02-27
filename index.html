@@ -244,9 +244,7 @@ function searchAddress() {
     return;
   }
 
-  const rawTokens = input.trim().split(/\s+/).map(t => normalize(t));
-
-  // 🔥 1文字トークン除外
+  const rawTokens = input.split(/\s+/).map(t => normalize(t));
   const tokens = rawTokens.filter(t => t.length >= 2);
 
   allResults = zipData.filter(item => {
@@ -254,20 +252,22 @@ function searchAddress() {
     const pref = normalize(item.pref);
     const city = normalize(item.city);
     const town = normalize(item.town);
+    const full = pref + city + town;
 
-    // 空白なし（1トークン）
-    if (tokens.length === 1 && rawTokens.length === 1) {
-      const token = tokens[0];
-      if (!token) return false;
+    // 🔹 空白なし
+    if (rawTokens.length === 1) {
+      const token = rawTokens[0];
+      if (token.length < 2) return false;
 
       return (
+        full.startsWith(token) ||
         pref === token ||
-        city.startsWith(token) ||
-        town.startsWith(token)
+        city === token ||
+        town === token
       );
     }
 
-    // 空白あり → 順番保持AND検索
+    // 🔹 空白あり（順番保持）
     let fields = [pref, city, town];
     let fieldIndex = 0;
 
@@ -275,14 +275,7 @@ function searchAddress() {
       let found = false;
 
       for (let i = fieldIndex; i < fields.length; i++) {
-
-        if (i < 2 && fields[i].startsWith(token)) {
-          fieldIndex = i + 1;
-          found = true;
-          break;
-        }
-
-        if (i === 2 && fields[i].startsWith(token)) {
+        if (fields[i].startsWith(token)) {
           fieldIndex = i + 1;
           found = true;
           break;
