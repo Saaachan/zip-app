@@ -13,147 +13,222 @@
 @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 
 :root {
-  --bg: #f4f8fb;
-  --text: #2f3a40;
-  --title: #3e7c92;
-  --accent: #4f9fb8;
-  --card: #ffffff;
-  --border: #e3f0f5;
-  --input-border: #cfe3ea;
-  --brown: #4a3f35;
-  --toggle-bg: #ddeff5;
+  --bg:#f4f8fb;
+  --text:#2f3a40;
+  --title:#3e7c92;
+  --accent:#4f9fb8;
+  --card:#ffffff;
+  --border:#e3f0f5;
+  --input-border:#cfe3ea;
+  --brown:#4a3f35;
+  --toggle-bg:#ddeff5;
 }
 
 body.dark {
-  --bg: #161c20;
-  --text: #e6edf1;
-  --title: #7cc3da;
-  --accent: #3c8aa3;
-  --card: #1f262b;
-  --border: #2c3940;
-  --input-border: #2c3940;
-  --brown: #e6ded6;
-  --toggle-bg: #2a3338;
+  --bg:#11161a;
+  --text:#e6edf1;
+  --title:#7cc3da;
+  --accent:#3c8aa3;
+  --card:#1b2227;
+  --border:#2a343a;
+  --input-border:#2a343a;
+  --brown:#e6ded6;
+  --toggle-bg:#222c31;
 }
 
-body {
-  font-family: 'Zen Maru Gothic', sans-serif;
-  background: var(--bg);
-  margin: 0;
-  padding: 60px 20px;
-  display: flex;
-  justify-content: center;
-  color: var(--text);
+body{
+  font-family:'Zen Maru Gothic',sans-serif;
+  background:var(--bg);
+  margin:0;
+  padding:60px 20px;
+  display:flex;
+  justify-content:center;
+  color:var(--text);
+  transition:background 0.3s ease,color 0.3s ease;
 }
 
-.container {
-  width: 100%;
-  max-width: 500px;
+.container{width:100%;max-width:500px;}
+
+.title{
+  text-align:center;
+  font-size:26px;
+  font-weight:700;
+  color:var(--title);
+  margin-bottom:30px;
 }
 
-.title {
-  text-align: center;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--title);
-  margin-bottom: 30px;
+.toggle-wrapper{
+  display:flex;
+  justify-content:center;
+  margin-bottom:32px;
 }
 
-.toggle-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
+.toggle{
+  width:64px;
+  height:30px;
+  background:var(--toggle-bg);
+  border-radius:999px;
+  position:relative;
+  cursor:pointer;
+  border:1px solid var(--border);
 }
 
-.toggle {
-  width: 64px;
-  height: 30px;
-  background: var(--toggle-bg);
-  border-radius: 999px;
-  position: relative;
-  cursor: pointer;
-  border: 1px solid var(--border);
+.toggle-circle{
+  width:26px;
+  height:26px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  top:1.5px;
+  left:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  transition:transform 0.35s ease;
 }
 
-.toggle-circle {
-  width: 26px;
-  height: 26px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 1.5px;
-  left: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  transition: transform 0.35s ease;
+body.dark .toggle-circle{
+  transform:translateX(32px);
 }
 
-body.dark .toggle-circle {
-  transform: translateX(32px);
+input{
+  width:100%;
+  padding:16px;
+  font-size:16px;
+  border-radius:16px;
+  border:1px solid var(--input-border);
+  background:var(--card);
+  box-sizing:border-box;
+  outline:none;
+  color:var(--brown);
+  margin-bottom:14px;
+  transition:all 0.2s ease;
 }
 
-input {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  border-radius: 16px;
-  border: 1px solid var(--input-border);
-  background: var(--card);
-  box-sizing: border-box;
-  outline: none;
-  color: var(--brown);
-  font-family: 'Zen Maru Gothic', sans-serif;
+input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(79,159,184,0.15);
 }
 
-input::placeholder {
-  color: #a08c7e;
+.search-btn{
+  font-family:'Zen Maru Gothic',sans-serif;
+  padding:10px 24px;
+  font-size:16px;
+  font-weight:600;
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:999px;
+  display:block;
+  margin:0 auto;
+  cursor:pointer;
+  transition:opacity 0.2s ease, transform 0.1s ease;
 }
 
-.search-btn {
-  margin-top: 20px;
-  padding: 12px 28px;
-  font-size: 17px;
-  font-weight: 600;
-  font-family: 'Zen Maru Gothic', sans-serif;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 999px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  cursor: pointer;
+.search-btn:hover{ opacity:0.85; }
+.search-btn:active{ transform:scale(0.98); }
+
+.card{
+  position:relative;
+  background:var(--card);
+  margin-top:22px;
+  padding:22px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.card {
-  background: var(--card);
-  margin-top: 22px;
-  padding: 22px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
 }
 
-.zip {
-  font-weight: 700;
-  font-size: 19px;
-  margin-bottom: 6px;
-  color: var(--title);
+.card:active{
+  transform:scale(0.97);
 }
 
-.address {
-  color: var(--brown);
-  font-weight: 500;
-  font-size: 15px;
+body.dark .card:hover{
+  transform:translateY(-4px);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.45),      /* 深い影 */
+    0 0 0 1px rgba(124,195,218,0.25), /* うっすら縁 */
+    0 0 18px rgba(124,195,218,0.25);  /* 青グロー */
 }
 
-.message {
-  margin-top: 28px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--brown);
+body.dark .card{
+  box-shadow:0 4px 14px rgba(0,0,0,0.35);
+}
+
+.zip{
+  font-weight:700;
+  font-size:19px;
+  margin-bottom:6px;
+  color:var(--title);
+}
+
+.address{
+  color:var(--brown);
+  font-weight:500;
+  font-size:15px;
+}
+
+.message{
+  margin-top:28px;
+  text-align:center;
+  font-size:15px;
+  font-weight:500;
+  color:var(--brown);
+}
+
+/* ===== v1.1.5 コピー表示 ===== */
+
+.copy-toast{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) scale(0.92);
+
+  /* 透過 */
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+
+  border:1px solid var(--accent);
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+
+  color:var(--accent);
+  padding:14px 22px;
+  border-radius:999px;
+  font-size:16px;
+  font-weight:600;
+
+  opacity:0;
+  transition:opacity 0.25s ease, transform 0.25s ease;
+  pointer-events:none;
+}
+
+.copy-toast.show{
+  opacity:1;
+  transform:translate(-50%, -50%) scale(1);
+}
+
+/* ダークは従来通り */
+
+body.dark .copy-toast{
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.25);
+  box-shadow:0 8px 20px rgba(0,0,0,0.35);
+  color:#ffffff;
+}
+
+.version{
+  margin-top:50px;
+  text-align:center;
+  font-size:12px;
+  opacity:0.6;
+  color:var(--brown);
 }
 </style>
 </head>
@@ -174,155 +249,220 @@ input::placeholder {
 
 <div id="result"></div>
 
+<div class="version">Zip Search v1.1.5</div>
+
 </div>
 
 <script>
-if (localStorage.getItem("theme") === "dark") {
+
+/* ダークモード */
+if(localStorage.getItem("theme")==="dark"){
   document.body.classList.add("dark");
 }
 updateIcon();
 
-function toggleDarkMode() {
+function toggleDarkMode(){
   document.body.classList.toggle("dark");
-  const isDark = document.body.classList.contains("dark");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
+  localStorage.setItem("theme",
+    document.body.classList.contains("dark")?"dark":"light"
+  );
   updateIcon();
 }
 
-function updateIcon() {
-  const icon = document.getElementById("toggleIcon");
-  icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+function updateIcon(){
+  document.getElementById("toggleIcon").textContent =
+    document.body.classList.contains("dark")?"☀️":"🌙";
 }
 
-let zipData = [];
-let dataLoaded = false;
-let allResults = [];
-let displayedCount = 0;
-const displayStep = 20;
+/* コピー */
+function copyText(text, card){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text);
+  }else{
+    const textarea=document.createElement("textarea");
+    textarea.value=text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
 
-async function loadCSV() {
-  const response = await fetch("utf_ken_all.csv");
-  const text = await response.text();
-  const lines = text.split("\n");
+  const toast=document.createElement("div");
+  toast.className="copy-toast";
+  toast.innerText="コピーしました";
+  card.appendChild(toast);
 
-  zipData = lines
-    .map(line => line.split(","))
-    .filter(cols => cols.length > 8)
-    .map(cols => ({
-      zipcode: cols[2].replace(/"/g, ""),
-      pref: cols[6].replace(/"/g, ""),
-      city: cols[7].replace(/"/g, ""),
-      town: cols[8].replace(/"/g, "")
-    }));
+  setTimeout(()=>toast.classList.add("show"),10);
+  setTimeout(()=>toast.remove(),1000);
+}
 
-  dataLoaded = true;
+/* ===== 検索ロジック（v1.1.3と同等） ===== */
+
+let zipData=[];
+let validSingleCharSet=new Set();
+let dataLoaded=false;
+let allResults=[];
+let displayedCount=0;
+const displayStep=20;
+
+async function loadCSV(){
+  const response=await fetch("utf_ken_all.csv");
+  const text=await response.text();
+  const lines=text.split("\n");
+
+  zipData=lines
+    .map(line=>line.split(","))
+    .filter(cols=>cols.length>8)
+    .map(cols=>{
+      const prefRaw=cols[6].replace(/"/g,"");
+      const cityRaw=cols[7].replace(/"/g,"");
+      const townRaw=cols[8].replace(/"/g,"");
+
+      const prefNorm=normalize(prefRaw);
+
+      let cityMajor="";
+      let cityMinor="";
+
+      if(prefNorm==="東京"){
+        cityMinor=normalize(cityRaw);
+      }else{
+        const match=cityRaw.match(/(.+?)市(.+区)?/);
+        if(match){
+          cityMajor=normalize(match[1]);
+          cityMinor=match[2]?normalize(match[2]):"";
+        }else{
+          cityMajor=normalize(cityRaw);
+        }
+      }
+
+      const townNorm=normalize(townRaw);
+
+      if(cityMinor.length===1) validSingleCharSet.add(cityMinor);
+      if(townNorm.length===1) validSingleCharSet.add(townNorm);
+
+      return{
+        zipcode:cols[2].replace(/"/g,""),
+        pref:prefNorm,
+        cityMajor,
+        cityMinor,
+        town:townNorm,
+        displayPref:prefRaw,
+        displayCity:cityRaw,
+        displayTown:townRaw
+      };
+    });
+
+  dataLoaded=true;
 }
 loadCSV();
 
-function formatZip(zip) {
-  return zip.length === 7 ? zip.slice(0,3) + "-" + zip.slice(3) : zip;
+function normalize(str){
+  return str.replace(/都|道|府|県|市|区|町|村/g,"").replace(/\s+/g,"");
 }
 
-function normalize(str) {
-  return str
-    .replace(/都|道|府|県|市|区|町|村/g, "")
-    .replace(/\s+/g, "");
+function formatZip(zip){
+  return zip.length===7?zip.slice(0,3)+"-"+zip.slice(3):zip;
 }
 
-function searchAddress() {
-  const input = document.getElementById("address").value.trim();
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = "";
+function searchAddress(){
+  const input=document.getElementById("address").value.trim();
+  const resultDiv=document.getElementById("result");
+  resultDiv.innerHTML="";
 
-  if (!dataLoaded) {
-    resultDiv.innerHTML = '<div class="message">データ読み込み中…少々お待ちください</div>';
+  if(!dataLoaded){
+    resultDiv.innerHTML='<div class="message">データ読み込み中…少々お待ちください</div>';
     return;
   }
 
-  if (!input) {
-    resultDiv.innerHTML = '<div class="message">住所を入力してください</div>';
+  if(!input){
+    resultDiv.innerHTML='<div class="message">住所を入力してください</div>';
     return;
   }
 
-  const rawTokens = input.split(/\s+/).map(t => normalize(t));
-  const tokens = rawTokens.filter(t => t.length >= 2);
+  const tokens=input.split(/\s+/).map(t=>normalize(t));
 
-  allResults = zipData.filter(item => {
-
-    const pref = normalize(item.pref);
-    const city = normalize(item.city);
-    const town = normalize(item.town);
-    const full = pref + city + town;
-
-    // 空白なし
-    if (rawTokens.length === 1) {
-      const token = rawTokens[0];
-      if (token.length < 2) return false;
-
-      return full.startsWith(token);
+  if(tokens.length===1 && tokens[0].length===1){
+    if(!validSingleCharSet.has(tokens[0])){
+      resultDiv.innerHTML='<div class="message">該当する地名が見つかりません</div>';
+      return;
     }
+  }
 
-    // 空白あり（連結順番保持）
-    let position = 0;
-
-    for (let token of tokens) {
-      const index = full.indexOf(token, position);
-      if (index === -1) return false;
-      position = index + token.length;
+  allResults=zipData.filter(item=>{
+    const full=item.pref+item.cityMajor+item.cityMinor+item.town;
+    let pos=0;
+    for(let token of tokens){
+      const index=full.indexOf(token,pos);
+      if(index===-1) return false;
+      pos=index+token.length;
     }
-
-    return tokens.length > 0;
+    return true;
   });
 
-  if (allResults.length === 0) {
-    resultDiv.innerHTML = '<div class="message">見つかりませんでした</div>';
+  if(allResults.length===0){
+    resultDiv.innerHTML='<div class="message">見つかりませんでした</div>';
     return;
   }
 
-  displayedCount = displayStep;
+  const lastToken=tokens[tokens.length-1];
+
+  allResults=allResults.map(item=>{
+    let score=0;
+    if(item.cityMajor===lastToken) score=120;
+    else if(item.cityMinor===lastToken) score=110;
+    else if(item.town===lastToken) score=100;
+    else if(item.cityMajor.startsWith(lastToken)) score=90;
+    else if(item.cityMinor.startsWith(lastToken)) score=85;
+    else if(item.town.startsWith(lastToken)) score=80;
+    else if(item.cityMajor.includes(lastToken)) score=70;
+    else if(item.cityMinor.includes(lastToken)) score=65;
+    else if(item.town.includes(lastToken)) score=60;
+    return {...item,score};
+  });
+
+  allResults.sort((a,b)=>b.score-a.score);
+
+  displayedCount=displayStep;
   renderResults();
 }
 
-function renderResults() {
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = "";
+function renderResults(){
+  const resultDiv=document.getElementById("result");
+  resultDiv.innerHTML="";
 
-  const total = allResults.length;
-  const visible = Math.min(displayedCount, total);
+  const total=allResults.length;
+  const visible=Math.min(displayedCount,total);
 
-  const info = document.createElement("div");
-  info.className = "message";
-  info.innerText = `全${total}件中 1-${visible}件を表示`;
+  const info=document.createElement("div");
+  info.className="message";
+  info.innerText=`${total}件中 1-${visible}件を表示`;
   resultDiv.appendChild(info);
 
-  allResults.slice(0, visible).forEach(item => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
+  allResults.slice(0,visible).forEach(item=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
       <div class="zip">〒${formatZip(item.zipcode)}</div>
-      <div class="address">${item.pref}${item.city}${item.town}</div>
+      <div class="address">${item.displayPref}${item.displayCity}${item.displayTown}</div>
     `;
-    div.onclick = () => {
-      navigator.clipboard.writeText(formatZip(item.zipcode));
-      alert("郵便番号をコピーしました");
-    };
+    div.onclick=()=>copyText(formatZip(item.zipcode),div);
     resultDiv.appendChild(div);
   });
 
-  if (visible < total) {
-    const moreBtn = document.createElement("button");
-    moreBtn.innerText = "さらに表示";
-    moreBtn.className = "search-btn";
-    moreBtn.style.marginTop = "16px";
-    moreBtn.onclick = () => {
-      displayedCount += displayStep;
+  if(visible<total){
+    const moreBtn=document.createElement("button");
+    moreBtn.innerText="さらに表示";
+    moreBtn.className="search-btn";
+    moreBtn.style.marginTop="16px";
+    moreBtn.onclick=()=>{
+      displayedCount+=displayStep;
       renderResults();
     };
     resultDiv.appendChild(moreBtn);
   }
 }
 
-if ("serviceWorker" in navigator) {
+if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js");
 }
 </script>
