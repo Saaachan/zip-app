@@ -254,36 +254,21 @@ function searchAddress() {
     const town = normalize(item.town);
     const full = pref + city + town;
 
-    // 🔹 空白なし
+    // 空白なし
     if (rawTokens.length === 1) {
       const token = rawTokens[0];
       if (token.length < 2) return false;
 
-      return (
-        full.startsWith(token) ||
-        pref === token ||
-        city === token ||
-        town === token
-      );
+      return full.startsWith(token);
     }
 
-    // 🔹 空白あり（順番保持・間スキップOK）
-    let fields = [pref, city, town];
-    let lastIndex = -1;
+    // 空白あり（連結順番保持）
+    let position = 0;
 
     for (let token of tokens) {
-
-      let found = false;
-
-      for (let i = lastIndex + 1; i < fields.length; i++) {
-        if (fields[i].startsWith(token)) {
-          lastIndex = i;
-          found = true;
-          break;
-        }
-      }
-
-      if (!found) return false;
+      const index = full.indexOf(token, position);
+      if (index === -1) return false;
+      position = index + token.length;
     }
 
     return tokens.length > 0;
