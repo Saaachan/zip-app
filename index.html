@@ -267,16 +267,17 @@ function searchAddress() {
       );
     }
 
-    // 🔹 空白あり（順番保持）
+    // 🔹 空白あり（順番保持・間スキップOK）
     let fields = [pref, city, town];
-    let fieldIndex = 0;
+    let lastIndex = -1;
 
     for (let token of tokens) {
+
       let found = false;
 
-      for (let i = fieldIndex; i < fields.length; i++) {
+      for (let i = lastIndex + 1; i < fields.length; i++) {
         if (fields[i].startsWith(token)) {
-          fieldIndex = i + 1;
+          lastIndex = i;
           found = true;
           break;
         }
