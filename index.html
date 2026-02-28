@@ -182,7 +182,7 @@ body.dark .card{
   color:var(--brown);
 }
 
-/* ===== v1.1.5 コピー表示 ===== */
+/* ===== コピー表示 ===== */
 
 .copy-toast{
   position:absolute;
@@ -214,7 +214,7 @@ body.dark .card{
   transform:translate(-50%, -50%) scale(1);
 }
 
-/* ダークは従来通り */
+/* ダークモードのコピー表示 */
 
 body.dark .copy-toast{
   background:rgba(255,255,255,0.12);
@@ -249,7 +249,7 @@ body.dark .copy-toast{
 
 <div id="result"></div>
 
-<div class="version">Zip Search v1.1.5</div>
+<div class="version">Zip Search v1.1.8</div>
 
 </div>
 
@@ -296,7 +296,7 @@ function copyText(text, card){
   setTimeout(()=>toast.remove(),1000);
 }
 
-/* ===== 検索ロジック（v1.1.3と同等） ===== */
+/* ===== 検索ロジック ===== */
 
 let zipData=[];
 let validSingleCharSet=new Set();
@@ -400,7 +400,7 @@ function searchAddress(){
   });
 
   if(allResults.length===0){
-    resultDiv.innerHTML='<div class="message">見つかりませんでした</div>';
+    resultDiv.innerHTML='<div class="message">該当する地名が見つかりません</div>';
     return;
   }
 
@@ -435,7 +435,7 @@ function renderResults(){
 
   const info=document.createElement("div");
   info.className="message";
-  info.innerText=`${total}件中 1-${visible}件を表示`;
+  info.innerText=`全${total}件中 1-${visible}件を表示`;
   resultDiv.appendChild(info);
 
   allResults.slice(0,visible).forEach(item=>{
